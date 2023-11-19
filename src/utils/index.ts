@@ -1,1 +1,1 @@
-export * from "./withSSRAuth";
+export * from "./query-provider";
