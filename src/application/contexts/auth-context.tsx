@@ -1,7 +1,6 @@
 "use client";
 
 import { api } from "@/config";
-import { useToast } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import { destroyCookie, setCookie } from "nookies";
 import { ReactNode, createContext } from "react";
@@ -73,7 +72,6 @@ export const AuthContext = createContext<AuthContextProps>({} as AuthContextProp
 
 export function AuthContextProvider ({ children }: { children: ReactNode }) {
   const router = useRouter();
-  const toast = useToast();
   
   async function signIn(input: SignInInput): Promise<SignInOuput> {
     const { data } = await api.post<SignInOuput>("/signin", input);
@@ -92,10 +90,7 @@ export function AuthContextProvider ({ children }: { children: ReactNode }) {
       destroyCookie(null, "promogate.token");
       router.push("/login");
     } catch {
-      toast({
-        status: "error",
-        description: "Erro eu tentar fazer logout"
-      });
+      
     }
   }
 

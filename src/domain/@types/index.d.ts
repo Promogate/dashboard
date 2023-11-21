@@ -258,3 +258,67 @@ export type UserMeResponse = {
     }
   }
 }
+
+export type SignInFormInput = {
+  email: string;
+  password: string;
+}
+
+export type SignInFormOutput = {
+  token: string,
+	user: {
+		id: string,
+		name: string,
+		email: string,
+		created_at: string,
+		user_profile: {
+			id: string,
+			store_image: string,
+			store_name: string,
+			store_name_display: string,
+			lomadee_source_id: string,
+			admitad_verification?: string,
+			payment_customer_id?: string,
+			role: string,
+			user_id: string,
+			social_media: {
+				id: string,
+				facebook?: string,
+				whatsapp?: string,
+				instagram?: string,
+				telegram?: string,
+				twitter?: string,
+				user_profile_id: cstring
+			}
+		},
+		agree_with_policies: boolean
+	}
+}
+
+export type User = {
+  id: string,
+  name: string,
+  email: string,
+  created_at: string,
+  user_profile: {
+    id: string,
+    store_image: string,
+    store_name: string,
+    store_name_display: string,
+    lomadee_source_id: string,
+    admitad_verification?: string,
+    payment_customer_id?: string,
+    role: string,
+    user_id: string,
+    social_media: {
+      id: string,
+      facebook?: string,
+      whatsapp?: string,
+      instagram?: string,
+      telegram?: string,
+      twitter?: string,
+      user_profile_id: cstring
+    }
+  },
+  agree_with_policies: boolean
+}

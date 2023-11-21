@@ -4,14 +4,13 @@ import { api } from "@/config";
 import { SocialSoulOfferDataInput } from "@/domain/@types";
 import { DashboardData, OfferDataInput, OfferWithClicks, RequestError } from "@/domain/models";
 import { parseBRLCurrencytoInteger } from "@/main/utils";
-import { useToast } from "@chakra-ui/react";
 import { AxiosError } from "axios";
 import dayjs from "dayjs";
 import { useRouter } from "next/router";
 import { parseCookies } from "nookies";
 import { ReactNode, createContext } from "react";
 import { useRecoilState } from "recoil";
-import { featuredOffersState } from "../atoms/FeaturedAtom";
+import { featuredOffersState } from "../atoms/featured-atom";
 
 type CreateProfileInput = {
   store_name: string;
@@ -65,7 +64,6 @@ export const PromogateContext = createContext<PromogateContextProps>({} as Promo
 
 /*eslint-disable react-hooks/exhaustive-deps*/
 export function PromogateContextProvider({ children }: { children: ReactNode }) {
-  const toast = useToast();
   const cookies = parseCookies();
   const router = useRouter();
   const [_, setFeaturedOffersState]= useRecoilState(featuredOffersState);
@@ -111,17 +109,8 @@ export function PromogateContextProvider({ children }: { children: ReactNode }) 
     }).then((fullfiled) => {
       const { data } = fullfiled;
 
-      toast({
-        status: "success",
-        description: "Loja criada com sucesso!"
-      });
-
       router.push("/dashboard");
     }).catch((err: AxiosError<RequestError>) => {
-      toast({
-        status: "error",
-        description: err.response?.data.message
-      });
     });
   }
 
