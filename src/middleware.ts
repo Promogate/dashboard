@@ -1,7 +1,6 @@
 import { api } from "@/config";
 import { cookies } from "next/headers";
-import type { NextRequest } from "next/server";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
 export function middleware(request: NextRequest) {
   const cookiesStorage = cookies();
@@ -12,10 +11,8 @@ export function middleware(request: NextRequest) {
       }
     }).then((response) => {
       const { data } = response;
-      
-
     }).catch((error) => {
-      return NextResponse.redirect("/");
+      return NextResponse.redirect(new URL("/", request.url));
     });
   }
   if (!cookiesStorage.get("promogate.token")) {
