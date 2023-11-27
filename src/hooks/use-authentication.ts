@@ -1,6 +1,6 @@
+import { useToast } from "@/components/ui/use-toast";
 import { api } from "@/config";
 import { SignInFormInput, SignInFormOutput } from "@/domain/@types";
-import toast from "react-hot-toast";
 import { useMutation } from "react-query";
 
 async function signInUser(values: SignInFormInput): Promise<SignInFormOutput> {
@@ -9,9 +9,14 @@ async function signInUser(values: SignInFormInput): Promise<SignInFormOutput> {
 }
 
 export function useAuthentication() {
+  const { toast } = useToast();
   const signIn = useMutation(signInUser, {
     onError: (error: any) => {
-      toast.error(error.response.data.message);
+      toast({
+        title: "Ops! algo deu errado",
+        description: error.response.data.message,
+        variant: "destructive"
+      });
     }
   });
 

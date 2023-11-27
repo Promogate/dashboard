@@ -92,17 +92,22 @@ export type OffersResponse = {
 
 export type Offer = {
   id: string;
-  name: string;
-  category: Record<string, unknown>;
-  link: string;
-  thumbnail: string;
-  price: number;
-  priceFrom?: number;
-  discount?: number;
-  installment: Record<string, unknown>;
+  image: string;
+  title: string;
+  old_price: string;
+  price: string;
+  destination_link: string;
+  store_image: string | null;
+  store_name: string;
+  description: string;
+  expiration_date: string;
+  created_at: string;
+  is_on_showcase: boolean;
   is_featured: boolean;
-  store: OfferStore;
-}
+  is_free_shipping: boolean;
+  resources_id: string;
+  categories: [];
+};
 
 export type OfferStore = {
   id: number;
@@ -271,6 +276,7 @@ export type SignInFormOutput = {
 		name: string,
 		email: string,
 		created_at: string,
+    resources_id: string,
 		user_profile: {
 			id: string,
 			store_image: string,
@@ -300,6 +306,7 @@ export type User = {
   name: string,
   email: string,
   created_at: string,
+  resources_id: string,
   user_profile: {
     id: string,
     store_image: string,
@@ -321,4 +328,9 @@ export type User = {
     }
   },
   agree_with_policies: boolean
+}
+
+export type SetShowcaseProductInput = {
+  isOnShowcase: string;
+  offerId: string;
 }

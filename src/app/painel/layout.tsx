@@ -26,10 +26,10 @@ export default function Layout({ children }: { children: ReactNode; }) {
         </div>
       </div>
       <div className="w-full">
-        <div className="w-full h-[56px] border-b border-gray-200 border-opacity-75 flex items-center px-4">
+        <div className="w-full h-[56px] border-b border-gray-200 border-opacity-75 flex items-center px-4 justify-end">
           TopBar Menu
         </div>
-        <div className="w-full min-h-[calc(100vh-56px)] bg-[#fafafa] p-4">
+        <div className="w-full min-h-[calc(100vh-56px)] bg-[#fafafa] p-6">
           {children}
         </div>
       </div>
