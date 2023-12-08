@@ -1,9 +1,9 @@
-import { parseCookies } from "nookies";
+import { getCookies } from "cookies-next";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL as string;
 const SOCIALSOUL_API_URL = process.env.NEXT_PUBLIC_SOCIALSOUL_API_URL as string;
 const SOCIALSOUL_APP_ID = process.env.NEXT_PUBLIC_SOCIALSOUL_APP_ID as string;
-const cookies = parseCookies();
+const cookies = getCookies();
 const AUTH_TOKEN = `Bearer ${cookies["promogate.token"]}`;
 
 export {

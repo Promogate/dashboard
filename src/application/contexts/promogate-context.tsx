@@ -5,9 +5,9 @@ import { SocialSoulOfferDataInput } from "@/domain/@types";
 import { DashboardData, OfferDataInput, OfferWithClicks, RequestError } from "@/domain/models";
 import { parseBRLCurrencytoInteger } from "@/main/utils";
 import { AxiosError } from "axios";
+import { getCookies } from "cookies-next";
 import dayjs from "dayjs";
 import { useRouter } from "next/router";
-import { parseCookies } from "nookies";
 import { ReactNode, createContext } from "react";
 import { useRecoilState } from "recoil";
 import { featuredOffersState } from "../atoms/featured-atom";
@@ -64,7 +64,7 @@ export const PromogateContext = createContext<PromogateContextProps>({} as Promo
 
 /*eslint-disable react-hooks/exhaustive-deps*/
 export function PromogateContextProvider({ children }: { children: ReactNode }) {
-  const cookies = parseCookies();
+  const cookies = getCookies();
   const router = useRouter();
   const [_, setFeaturedOffersState]= useRecoilState(featuredOffersState);
 
@@ -91,6 +91,7 @@ export function PromogateContextProvider({ children }: { children: ReactNode }) 
     const { data } = await api.get<FetchStoreOffersResponse>(`/resources/offers/${storeName}`);
     const featuredOffers = data.data.resources.offers.filter(offer => offer.is_featured);
     setFeaturedOffersState(featuredOffers);
+
     return {
       ...data,
       featured: featuredOffers

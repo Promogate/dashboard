@@ -1,12 +1,6 @@
 import { AuthForm } from "@/components";
 
-type PageProps = {
-  params: {
-    isLogged: string | undefined;
-  };
-};
-
-export default function Page({ params }: PageProps) {
+export default function Page() {
   return (
     <>
       <section className="grid grid-cols-2 h-screen justify-center">

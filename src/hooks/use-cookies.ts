@@ -1,8 +1,8 @@
-import { setCookie } from "nookies";
+import { setCookie } from "cookies-next";
 
 export function useCookies() {
   function createAuthCookie(token: string) {
-    return setCookie(null, "promogate.token", token);
+    return setCookie("promogate.token", token);
   }
   
   return {
