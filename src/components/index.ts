@@ -1,5 +1,6 @@
 export * from "./auth-form";
 export * from "./general-navigation-menu";
+export * from "./no-resource-warning";
 export * from "./page-header";
 export * from "./products-table";
 export * from "./sign-out-button";

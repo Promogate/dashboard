@@ -1,5 +1,9 @@
+import { NoResourcesWarning } from "@/components";
+
 export default function Page() {
   return (
-    <p>Categorias</p>
+    <NoResourcesWarning>
+      <p>Informações de categorias</p>
+    </NoResourcesWarning>
   );
 }

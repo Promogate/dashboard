@@ -1,5 +1,9 @@
+import { NoResourcesWarning } from "@/components";
+
 export default function Page() {
   return (
-    <p>Encurtador</p>
+    <NoResourcesWarning>
+      <p>Informações do encurtador</p>
+    </NoResourcesWarning>
   );
 }

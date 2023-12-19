@@ -12,10 +12,12 @@ async function signInUser(values: SignInFormInput): Promise<SignInFormOutput> {
   return data;
 }
 
+
+
 export function useAuthentication() {
   const { toast } = useToast();
   const router = useRouter();
-  const [, setLoggedUser] = useRecoilState(loggedUser);
+  const [loggerUserData, setLoggedUser] = useRecoilState(loggedUser);
   const [, setAuthToken] = useRecoilState(authToken);
 
   const signIn = useMutation(async (values: SignInFormInput) => await signInUser(values), {
@@ -40,6 +42,6 @@ export function useAuthentication() {
   });
 
   return {
-    signIn
+    signIn,
   };
 }

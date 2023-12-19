@@ -1,5 +1,9 @@
+import { NoResourcesWarning } from "@/components";
+
 export default function Page() {
   return (
-    <p>Redirecionador</p>
+    <NoResourcesWarning>
+      <p>Informações do redirecinador</p>
+    </NoResourcesWarning>
   );
 }

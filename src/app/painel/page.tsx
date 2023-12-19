@@ -1,5 +1,9 @@
+import { NoResourcesWarning } from "@/components";
+
 export default function Page() {
   return (
-    <p>Meu Painel</p>
+    <NoResourcesWarning>
+      <p>Informações do painel</p>
+    </NoResourcesWarning>
   );
 }
