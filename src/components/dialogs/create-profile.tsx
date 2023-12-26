@@ -1,6 +1,5 @@
 "use client";
 
-import { loggedUser } from "@/application/atoms";
 import { makeUniqueStoreName } from "@/application/utils/makeUniqueStoreName";
 import { api } from "@/config";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -8,7 +7,6 @@ import { useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { useMutation } from "react-query";
 import { PulseLoader } from "react-spinners";
-import { useRecoilValue } from "recoil";
 import * as z from "zod";
 import { Button } from "..";
 import { FormErrorMessage } from "../form-error-message";
@@ -27,7 +25,6 @@ type CreateProfileInput = {
 }
 
 export function CreateProfileDialog() {
-  const user = useRecoilValue(loggedUser);
   const { toast } = useToast();
   const [uniqueName, setUniqueName] = useState<string>("");
 
@@ -64,7 +61,7 @@ export function CreateProfileDialog() {
 
   const onSubmit: SubmitHandler<CreateProfileInput> = async (values) => {
     // await mutation.mutateAsync({ ...values, userId: user?.id as string, storeImage: "", storeName: uniqueName });
-    console.log({ ...values, userId: user?.id as string, storeImage: "", storeName: uniqueName });
+    console.log({ ...values, userId: "NEED TO RETRIEVE" as string, storeImage: "", storeName: uniqueName });
   };
 
   const handleUniqueNamePreview = (): string => {

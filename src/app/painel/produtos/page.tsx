@@ -1,15 +1,14 @@
 "use client";
 
-import { loggedUser } from "@/application/atoms";
+import { useUser } from "@/application/states/user-store";
 import { Button, NoResourcesWarning, PageHeader, ProductsTable } from "@/components";
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { useQuery } from "react-query";
 import { PulseLoader } from "react-spinners";
-import { useRecoilValue } from "recoil";
 
 export default function Page() {
-  const user = useRecoilValue(loggedUser);
-  const resourcesId = user?.resources_id as string;
+  const user = useUser((state) => state.user);
+  const resourcesId = user?.user_profile?.resources.id as string;
   const query = useQuery({ queryKey: ["products", resourcesId], cacheTime: 1000 * 60 * 5, staleTime: 1000 * 60 * 5 });
   const handleProductsTableUpdate = () => {
     query.refetch();

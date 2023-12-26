@@ -1,16 +1,16 @@
 "use client";
 
-import { loggedUser } from "@/application/atoms";
+import { User, useUser } from "@/application/states/user-store";
 import { makeUniqueStoreName } from "@/application/utils/makeUniqueStoreName";
 import { api } from "@/config";
-import { useRefreshUserData } from "@/hooks/use-refresh-user-data";
+import { useAuthentication } from "@/hooks";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useRouter } from "next/navigation";
 import { ReactNode, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { IoWarningOutline } from "react-icons/io5";
 import { useMutation, useQueryClient } from "react-query";
 import { PulseLoader } from "react-spinners";
-import { useRecoilState } from "recoil";
 import * as z from "zod";
 import { Button } from ".";
 import { CreateProfileDialog } from "./dialogs/create-profile";
@@ -31,12 +31,14 @@ type CreateProfileInput = {
 }
 
 export function NoResourcesWarning({ children }: { children: ReactNode }) {
-  const [user, setUser] = useRecoilState(loggedUser);
   const [open, setOpen] = useState<boolean>(false);
   const [uniqueName, setUniqueName] = useState<string>("");
   const { toast } = useToast();
-  const { data: userData } = useRefreshUserData(user?.id as string);
+  const user = useUser((state) => state.user);
+  const setUser = useUser((state) => state.setUser);
+  const { meData } = useAuthentication();
   const query = useQueryClient();
+  const router = useRouter();
 
   const { register, handleSubmit, formState: { errors } } = useForm<CreateProfileInput>({
     resolver: zodResolver(schema),
@@ -60,8 +62,10 @@ export function NoResourcesWarning({ children }: { children: ReactNode }) {
         variant: "default"
       });
       setOpen(false);
-      query.invalidateQueries(["userData", user?.id]);
-      setUser(userData);
+      query.invalidateQueries(["userData", user?.id as string]);
+      const { data } = meData;
+      setUser(data as User);
+      router.push("/painel");
     },
     onError: (error: any) => {
       toast({
@@ -81,9 +85,7 @@ export function NoResourcesWarning({ children }: { children: ReactNode }) {
     return makeUniqueStoreName(uniqueName);
   };
 
-  console.log("userData: ", userData);
-
-  if (userData?.user_profile === null) {
+  if (user?.user_profile === null) {
     return (
       <div className="flex gap-x-8 items-center">
         <Dialog open={open} onOpenChange={setOpen}>

@@ -272,33 +272,27 @@ export type SignInFormInput = {
 export type SignInFormOutput = {
   token: string,
 	user: {
-		id: string,
-		name: string,
-		email: string,
-		created_at: string,
-    resources_id: string,
-		user_profile: {
-			id: string,
-			store_image: string,
-			store_name: string,
-			store_name_display: string,
-			lomadee_source_id: string,
-			admitad_verification?: string,
-			payment_customer_id?: string,
-			role: string,
-			user_id: string,
-			social_media: {
-				id: string,
-				facebook?: string,
-				whatsapp?: string,
-				instagram?: string,
-				telegram?: string,
-				twitter?: string,
-				user_profile_id: cstring
-			}
-		},
-		agree_with_policies: boolean
-	}
+    id: string;
+    name: string;
+    email: string;
+    created_at: string;
+    user_profile: {
+      id: string;
+      store_image: string;
+      store_name: string;
+      store_name_display: string;
+      lomadee_source_id: string | null;
+      admitad_verification: string | null;
+      payment_customer_id: string | null;
+      role: string;
+      user_id: string;
+      social_media: any | null;
+      resources: {
+        id: string;
+      };
+    };
+    agree_with_policies: boolean
+  }
 }
 
 export type User = {
@@ -306,7 +300,6 @@ export type User = {
   name: string,
   email: string,
   created_at: string,
-  resources_id: string,
   user_profile: {
     id: string,
     store_image: string,
@@ -317,14 +310,8 @@ export type User = {
     payment_customer_id?: string,
     role: string,
     user_id: string,
-    social_media: {
-      id: string,
-      facebook?: string,
-      whatsapp?: string,
-      instagram?: string,
-      telegram?: string,
-      twitter?: string,
-      user_profile_id: cstring
+    resources: {
+      id: string
     }
   },
   agree_with_policies: boolean

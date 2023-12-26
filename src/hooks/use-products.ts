@@ -1,10 +1,9 @@
 import { queryClient } from "@/app/providers";
-import { loggedUser } from "@/application/atoms";
+import { useUser } from "@/application/states/user-store";
 import { useToast } from "@/components/ui/use-toast";
 import { api } from "@/config";
 import { OffersResponse, SetShowcaseProductInput } from "@/domain/@types";
 import { useMutation, useQuery } from "react-query";
-import { useRecoilValue } from "recoil";
 
 async function setShowcaseProduct(input: SetShowcaseProductInput): Promise<void> {
   await api.put(`/resources/offer/${input.offerId}/update/showcase`, {
@@ -20,8 +19,8 @@ async function getProducts(resourcesId: string): Promise<OffersResponse> {
 
 export function useProductsHook() {
   const { toast } = useToast();
-  const user = useRecoilValue(loggedUser);
-  const resourcesId = user?.resources_id as string;
+  const user = useUser((state) => state.user);
+  const resourcesId = user?.user_profile?.resources.id as string;
 
   return {
     useProducts: () => useQuery(["products", resourcesId], {

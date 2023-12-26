@@ -1,7 +1,6 @@
 "use client";
 
 import { QueryClient, QueryClientProvider } from "react-query";
-import { RecoilRoot } from "recoil";
 
 export const queryClient = new QueryClient();
 
@@ -12,9 +11,7 @@ export function Providers({
 }) {
   return (
     <QueryClientProvider client={queryClient}>
-      <RecoilRoot>
           {children}
-      </RecoilRoot>
     </QueryClientProvider>
   );
 }
