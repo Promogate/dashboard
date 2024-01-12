@@ -2,7 +2,8 @@
 
 import { useUser } from "@/application/states/user-store";
 import { Button, NoResourcesWarning, PageHeader, ProductsTable } from "@/components";
-import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { CreateProductForm } from "@/components/forms";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { useQuery } from "react-query";
 import { PulseLoader } from "react-spinners";
 
@@ -38,11 +39,7 @@ export default function Page() {
                 Adicionar um novo produto
               </DialogTitle>
             </DialogHeader>
-            <DialogFooter>
-              <Button>
-                Adicionar
-              </Button>
-            </DialogFooter>
+            <CreateProductForm />
           </DialogContent>
         </Dialog>
         <ProductsTable />
