@@ -1,3 +1,5 @@
+"use client";
+
 import { useUser } from "@/application/states/user-store";
 import { api } from "@/config";
 import { useRef } from "react";
