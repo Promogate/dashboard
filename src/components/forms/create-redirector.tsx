@@ -9,6 +9,7 @@ import { Button } from "..";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "../ui/form";
 import { Input } from "../ui/input";
 import { useToast } from "../ui/use-toast";
+import { queryClient } from "@/app/providers";
 
 type CreateRedirectorInput = {
   title: string;
@@ -43,6 +44,7 @@ export function CreateRedirectorForm({ setOpen }: CreateRedirectorFormProps) {
         title: "Redirecionador criado com sucesso!",
         variant: "default",
       });
+      queryClient.invalidateQueries(["redirectors", resourcesId]);
       setOpen(false);
     },
     onError: (error: any) => {

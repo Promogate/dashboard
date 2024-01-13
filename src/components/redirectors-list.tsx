@@ -32,7 +32,7 @@ export function RedirectorsList() {
   const { toast } = useToast();
   const user = useUser((state) => state.user);
   const resourcesId = user?.user_profile?.resources.id as string;
-  const { data, isLoading, isError } = useQuery({
+  const { data, isLoading, isError } = useQuery(["redirectors", resourcesId], {
     queryFn: async () => {
       const response = await api.get(`/resources/${resourcesId}/redirectors`);
       return response.data;
