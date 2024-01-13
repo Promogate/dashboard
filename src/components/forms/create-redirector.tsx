@@ -36,7 +36,7 @@ export function CreateRedirectorForm({ setOpen }: CreateRedirectorFormProps) {
 
   const mutation = useMutation({
     mutationFn: async (values: CreateRedirectorInput) => {
-      await api.post(`/resources/${resourcesId}/redirector/create`, values);
+      await api.post(`/redirector/create`, { ...values, resourcesId });
     },
     onSuccess: () => {
       toast({
