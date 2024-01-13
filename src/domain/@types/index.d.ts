@@ -92,17 +92,22 @@ export type OffersResponse = {
 
 export type Offer = {
   id: string;
-  name: string;
-  category: Record<string, unknown>;
-  link: string;
-  thumbnail: string;
-  price: number;
-  priceFrom?: number;
-  discount?: number;
-  installment: Record<string, unknown>;
+  image: string;
+  title: string;
+  old_price: string;
+  price: string;
+  destination_link: string;
+  store_image: string | null;
+  store_name: string;
+  description: string;
+  expiration_date: string;
+  created_at: string;
+  is_on_showcase: boolean;
   is_featured: boolean;
-  store: OfferStore;
-}
+  is_free_shipping: boolean;
+  resources_id: string;
+  categories: [];
+};
 
 export type OfferStore = {
   id: number;
@@ -257,4 +262,62 @@ export type UserMeResponse = {
       user_profile_id: string
     }
   }
+}
+
+export type SignInFormInput = {
+  email: string;
+  password: string;
+}
+
+export type SignInFormOutput = {
+  token: string,
+	user: {
+    id: string;
+    name: string;
+    email: string;
+    created_at: string;
+    user_profile: {
+      id: string;
+      store_image: string;
+      store_name: string;
+      store_name_display: string;
+      lomadee_source_id: string | null;
+      admitad_verification: string | null;
+      payment_customer_id: string | null;
+      role: string;
+      user_id: string;
+      social_media: any | null;
+      resources: {
+        id: string;
+      };
+    };
+    agree_with_policies: boolean
+  }
+}
+
+export type User = {
+  id: string,
+  name: string,
+  email: string,
+  created_at: string,
+  user_profile: {
+    id: string,
+    store_image: string,
+    store_name: string,
+    store_name_display: string,
+    lomadee_source_id: string,
+    admitad_verification?: string,
+    payment_customer_id?: string,
+    role: string,
+    user_id: string,
+    resources: {
+      id: string
+    }
+  },
+  agree_with_policies: boolean
+}
+
+export type SetShowcaseProductInput = {
+  isOnShowcase: string;
+  offerId: string;
 }

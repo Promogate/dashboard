@@ -4,14 +4,11 @@ import { api } from "@/config";
 import { SocialSoulOfferDataInput } from "@/domain/@types";
 import { DashboardData, OfferDataInput, OfferWithClicks, RequestError } from "@/domain/models";
 import { parseBRLCurrencytoInteger } from "@/main/utils";
-import { useToast } from "@chakra-ui/react";
 import { AxiosError } from "axios";
+import { getCookies } from "cookies-next";
 import dayjs from "dayjs";
 import { useRouter } from "next/router";
-import { parseCookies } from "nookies";
 import { ReactNode, createContext } from "react";
-import { useRecoilState } from "recoil";
-import { featuredOffersState } from "../atoms/FeaturedAtom";
 
 type CreateProfileInput = {
   store_name: string;
@@ -65,10 +62,8 @@ export const PromogateContext = createContext<PromogateContextProps>({} as Promo
 
 /*eslint-disable react-hooks/exhaustive-deps*/
 export function PromogateContextProvider({ children }: { children: ReactNode }) {
-  const toast = useToast();
-  const cookies = parseCookies();
+  const cookies = getCookies();
   const router = useRouter();
-  const [_, setFeaturedOffersState]= useRecoilState(featuredOffersState);
 
   async function fetchDashboardData(profileId: string): Promise<DashboardData> {
     const { data } = await api.get<DashboardData>(`/analytics/profile/${profileId}`, {
@@ -92,7 +87,7 @@ export function PromogateContextProvider({ children }: { children: ReactNode }) 
   async function fetchStoreOffers(storeName: string): Promise<FetchStoreOffersResponse> {
     const { data } = await api.get<FetchStoreOffersResponse>(`/resources/offers/${storeName}`);
     const featuredOffers = data.data.resources.offers.filter(offer => offer.is_featured);
-    setFeaturedOffersState(featuredOffers);
+
     return {
       ...data,
       featured: featuredOffers
@@ -111,17 +106,8 @@ export function PromogateContextProvider({ children }: { children: ReactNode }) 
     }).then((fullfiled) => {
       const { data } = fullfiled;
 
-      toast({
-        status: "success",
-        description: "Loja criada com sucesso!"
-      });
-
       router.push("/dashboard");
     }).catch((err: AxiosError<RequestError>) => {
-      toast({
-        status: "error",
-        description: err.response?.data.message
-      });
     });
   }
 

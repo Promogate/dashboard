@@ -1,9 +1,9 @@
 import { api } from "@/config";
 import { OfferWithClicks } from "@/domain/models";
-import { parseCookies } from "nookies";
+import { getCookies } from "cookies-next";
 
 export async function getOffersWithAnalytics (): Promise<OfferWithClicks[]> {
-  const cookies = parseCookies();
+  const cookies = getCookies();
 
   const { data } = await api.get<OfferWithClicks[]>("/dashboard/analytics/offers/clicks", {
     headers: {

@@ -29,15 +29,14 @@ export class AWSUploadService implements IAWSUploadService {
 
   async uploadImage(input: IAWSUpload.Input): Promise<IAWSUpload.Output> {
     const fileName = `${Date.now()}.${input.user}`;
-
     const params = {
       Bucket: "promogate",
       Key: fileName,
       Body: input.file,
     };
-
     const upload = this.s3.upload(params);
     const { Location } = await upload.promise();
+
     return {
       url: Location
     };
@@ -49,9 +48,9 @@ export class AWSUploadService implements IAWSUploadService {
       Key: input.file.name,
       Body: input.file,
     };
-
     const upload = this.s3.upload(params);
     const { Location } = await upload.promise();
+    
     return {
       url: Location
     };
