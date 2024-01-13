@@ -10,11 +10,12 @@ import { LiaCopySolid } from "react-icons/lia";
 import { Button } from ".";
 import { Input } from "./ui/input";
 import { LiaLayerGroupSolid } from "react-icons/lia";
+import { BiEditAlt } from "react-icons/bi";
 import { TbHandClick } from "react-icons/tb";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "./ui/tooltip";
 import { TooltipComponent } from "./tooltip";
 import { copyToClipboard } from "@/utils/copy-to-clipboard";
 import { useToast } from "./ui/use-toast";
+import Link from "next/link";
 
 type Redirector = {
   id: string;
@@ -52,7 +53,6 @@ export function RedirectorsList() {
 
   if (isLoading) {
     return (
-
       <div className="mx-auto py-10 my-10 h-32 rounded-md border bg-white flex justify-center items-center">
         <PulseLoader color="#2a2a2a" size={16} />
       </div>
@@ -83,6 +83,11 @@ export function RedirectorsList() {
                   <Button variant={"ghost"} className="bg-gray-200" onClick={handleCopyShortlink}>
                     <LiaCopySolid />
                   </Button>
+                  <Link href={`/painel/redirecionador/${redirector.id}`}>
+                    <Button variant="outline">
+                      <BiEditAlt />
+                    </Button>
+                  </Link>
                 </div>
               </div>
               <div className="w-full flex gap-8 items-center">

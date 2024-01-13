@@ -1,41 +1,11 @@
-"use client";
-
-import { Button, NoResourcesWarning, PageHeader } from "@/components";
-import { CreateRedirectorForm } from "@/components/forms";
-import { RedirectorsList } from "@/components/redirectors-list";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { ReactNode, useState } from "react";
+import { NoResourcesWarning } from "@/components";
+import { ReactNode } from "react";
 
 export default function Layout({ children }: { children: ReactNode; }) {
-  const [open, setOpen] = useState(false);
 
   return (
     <NoResourcesWarning>
       <div className="w-full h-full">
-        <Dialog open={open} onOpenChange={setOpen}>
-          <div className="w-full flex justify-between items-center">
-            <PageHeader>Redirecionadores</PageHeader>
-            <div className="flex items-center gap-4">
-              <Button variant={"outline"} className="flex items-center gap-2 trasition-all duration-500 ease-in-out" onClick={() => { }}>
-                {/* {query.isRefetching && <PulseLoader color="#2a2a2a" size={4} />} */}
-                Atualizar redirecionadores
-              </Button>
-              <DialogTrigger asChild>
-                <Button variant={"default"} className="bg-[#5528ff] text-white">
-                  Adicionar redirecionador
-                </Button>
-              </DialogTrigger>
-            </div>
-          </div>
-          <DialogContent>
-            <DialogHeader>
-              <DialogTitle>
-                Adicionar novo redirecionador
-              </DialogTitle>
-            </DialogHeader>
-            <CreateRedirectorForm setOpen={setOpen} />
-          </DialogContent>
-        </Dialog>
         {children}
       </div>
     </NoResourcesWarning>
