@@ -45,7 +45,7 @@ export default function Page() {
 
   const { data, isLoading, isError, refetch, isRefetching } = useQuery<RedirectorProps>(["redirector", params.id], {
     queryFn: async () => {
-      const { data } = await api.get(`/redirector/${params.id}`);
+      const { data } = await api.get(`/redirector/find-by-id/${params.id}`);
       return data;
     },
     staleTime: 1000 * 60 * 5,
