@@ -6,15 +6,12 @@ import { BiEditAlt } from "react-icons/bi";
 import { useRef } from "react";
 import { copyToClipboard } from "@/utils/copy-to-clipboard";
 import { useToast } from "../ui/use-toast";
-import { Redirector } from "@/domain/@types";
+import { useRedirectorContext } from "./redirector-context";
 
-type RedirectorActionsProps = {
-  redirector: Redirector
-}
-
-export function RedirectorActions({ redirector }: RedirectorActionsProps) {
+export function RedirectorActions() {
   const shortlinkRef = useRef<HTMLInputElement>(null);
   const { toast } = useToast();
+  const { redirector } = useRedirectorContext();
 
   const handleCopyShortlink = () => {
     if (shortlinkRef.current) {

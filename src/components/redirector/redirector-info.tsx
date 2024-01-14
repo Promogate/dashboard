@@ -1,13 +1,10 @@
 import { LiaLayerGroupSolid } from "react-icons/lia";
 import { TooltipComponent } from "../tooltip";
 import { TbHandClick } from "react-icons/tb";
-import { Redirector } from "@/domain/@types";
+import { useRedirectorContext } from "./redirector-context";
 
-type RedirectorInfoProps = {
-  redirector: Redirector
-}
-
-export function RedirectorInfo({ redirector }: RedirectorInfoProps) {
+export function RedirectorInfo() {
+  const { redirector } = useRedirectorContext();
   return (
     <div className="w-full flex gap-8 items-center">
       <TooltipComponent tooltip="Grupos" data={redirector.groups.length}>

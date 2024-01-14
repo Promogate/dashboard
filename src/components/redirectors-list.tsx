@@ -42,11 +42,11 @@ export function RedirectorsList() {
       {
         data.map((redirector: RedirectorProps, index: number) => {
           return (
-            <Redirector.Root key={index}>
-              <Redirector.Header redirector={redirector}>
-                <Redirector.Actions redirector={redirector} />
+            <Redirector.Root key={index} redirector={redirector}>
+              <Redirector.Header>
+                <Redirector.Actions />
               </Redirector.Header>
-              <Redirector.Info redirector={redirector} />
+              <Redirector.Info />
             </Redirector.Root>
           );
         })
