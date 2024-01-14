@@ -1,5 +1,3 @@
-import { Redirector } from "@/domain/@types";
-import { RedirectorActions } from "./redirector-actions";
 import { ReactNode } from "react";
 import { useRedirectorContext } from "./redirector-context";
 
