@@ -9,6 +9,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { Input } from "../ui/input";
 import { useToast } from "../ui/use-toast";
 import { queryClient } from "@/app/providers";
+import { useUser } from "@/application/states/user-store";
 
 type CreateGroupInput = {
   title: string;
@@ -32,12 +33,13 @@ type CreateGroupFormProps = {
 }
 
 export function CreateGroupForm({ setOpen, redirectorId }: CreateGroupFormProps) {
+  const user = useUser(state => state.user);
+  const resourcesId = user?.user_profile?.resources.id as string;
   const { toast } = useToast();
   const form = useForm<createGroupSchema>({
     resolver: zodResolver(schema),
     mode: "onBlur"
   });
-
   const mutation = useMutation({
     mutationFn: async (values: CreateGroupInput) => {
       await api.post(`/redirector/${redirectorId}/group/create`, values);
@@ -49,6 +51,7 @@ export function CreateGroupForm({ setOpen, redirectorId }: CreateGroupFormProps)
       });
       setOpen(false);
       queryClient.invalidateQueries(["redirector", redirectorId]);
+      queryClient.invalidateQueries(["redirectors", resourcesId]);
     },
     onError: (error: any) => {
       toast({
