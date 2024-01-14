@@ -2,34 +2,13 @@
 
 import { useUser } from "@/application/states/user-store";
 import { api } from "@/config";
-import { useRef } from "react";
 import { BiError } from "react-icons/bi";
 import { useQuery } from "react-query";
 import { PulseLoader } from "react-spinners";
-import { LiaCopySolid } from "react-icons/lia";
-import { Button } from ".";
-import { Input } from "./ui/input";
-import { LiaLayerGroupSolid } from "react-icons/lia";
-import { BiEditAlt } from "react-icons/bi";
-import { TbHandClick } from "react-icons/tb";
-import { TooltipComponent } from "./tooltip";
-import { copyToClipboard } from "@/utils/copy-to-clipboard";
-import { useToast } from "./ui/use-toast";
-import Link from "next/link";
-
-type Redirector = {
-  id: string;
-  title: string;
-  description: string;
-  redirectorLink: string;
-  resources_id: string;
-  groups: [],
-  totalClicks: number | null
-}
+import { Redirector as RedirectorProps } from "@/domain/@types";
+import { Redirector } from "./redirector";
 
 export function RedirectorsList() {
-  const shortlinkRef = useRef<HTMLInputElement>(null);
-  const { toast } = useToast();
   const user = useUser((state) => state.user);
   const resourcesId = user?.user_profile?.resources.id as string;
   const { data, isLoading, isError } = useQuery(["redirectors", resourcesId], {
@@ -40,16 +19,6 @@ export function RedirectorsList() {
     cacheTime: 1000 * 60 * 5,
     staleTime: 1000 * 60 * 5
   });
-
-  const handleCopyShortlink = () => {
-    if (shortlinkRef.current) {
-      copyToClipboard(shortlinkRef.current.value);
-      toast({
-        title: "Link copiado com sucesso!",
-        variant: "default",
-      });
-    }
-  };
 
   if (isLoading) {
     return (
@@ -69,36 +38,16 @@ export function RedirectorsList() {
   }
 
   return (
-    <div className="grid 2xl:grid-cols-2 my-6">
+    <div className="grid 2xl:grid-cols-2 my-6 gap-y-4 gap-x-4">
       {
-        data.map((redirector: Redirector, index: number) => {
+        data.map((redirector: RedirectorProps, index: number) => {
           return (
-            <div key={index} className="border rounded-lg bg-white p-4">
-              <div className="w-full flex justify-between align-middle">
-                <h2 className="text-xl font-semibold">
-                  {redirector.title}
-                </h2>
-                <div className="flex gap-2 align-middle">
-                  <Input type="text" value={redirector.redirectorLink} readOnly ref={shortlinkRef} />
-                  <Button variant={"ghost"} className="bg-gray-200" onClick={handleCopyShortlink}>
-                    <LiaCopySolid />
-                  </Button>
-                  <Link href={`/painel/redirecionador/${redirector.id}`}>
-                    <Button variant="outline">
-                      <BiEditAlt />
-                    </Button>
-                  </Link>
-                </div>
-              </div>
-              <div className="w-full flex gap-8 items-center">
-                <TooltipComponent tooltip="Grupos" data={redirector.groups.length}>
-                  <LiaLayerGroupSolid />
-                </TooltipComponent>
-                <TooltipComponent tooltip="Cliques" data={redirector.totalClicks ?? 0}>
-                  <TbHandClick />
-                </TooltipComponent>
-              </div>
-            </div>
+            <Redirector.Root key={index}>
+              <Redirector.Header redirector={redirector}>
+                <Redirector.Actions redirector={redirector} />
+              </Redirector.Header>
+              <Redirector.Info redirector={redirector} />
+            </Redirector.Root>
           );
         })
       }

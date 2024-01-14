@@ -321,3 +321,13 @@ export type SetShowcaseProductInput = {
   isOnShowcase: string;
   offerId: string;
 }
+
+export type Redirector = {
+  id: string;
+  title: string;
+  description: string;
+  redirectorLink: string;
+  resources_id: string;
+  groups: [],
+  totalClicks: number | null
+}
