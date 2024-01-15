@@ -16,34 +16,32 @@ export default function Page() {
   };
 
   return (
-    <NoResourcesWarning>
-      <div className="w-full h-full">
-        <Dialog>
-          <div className="w-full flex justify-between items-center">
-            <PageHeader>Produtos</PageHeader>
-            <div className="flex items-center gap-4">
-              <Button variant={"outline"} className="flex items-center gap-2 trasition-all duration-500 ease-in-out" onClick={handleProductsTableUpdate}>
-                {query.isRefetching && <PulseLoader color="#2a2a2a" size={4} />}
-                Atualizar produtos
+    <div className="w-full h-full">
+      <Dialog>
+        <div className="w-full flex justify-between items-center">
+          <PageHeader>Produtos</PageHeader>
+          <div className="flex items-center gap-4">
+            <Button variant={"outline"} className="flex items-center gap-2 trasition-all duration-500 ease-in-out" onClick={handleProductsTableUpdate}>
+              {query.isRefetching && <PulseLoader color="#2a2a2a" size={4} />}
+              Atualizar produtos
+            </Button>
+            <DialogTrigger asChild>
+              <Button variant={"default"} className="bg-[#5528ff] text-white">
+                Adicionar produto
               </Button>
-              <DialogTrigger asChild>
-                <Button variant={"default"} className="bg-[#5528ff] text-white">
-                  Adicionar produto
-                </Button>
-              </DialogTrigger>
-            </div>
+            </DialogTrigger>
           </div>
-          <DialogContent>
-            <DialogHeader>
-              <DialogTitle>
-                Adicionar um novo produto
-              </DialogTitle>
-            </DialogHeader>
-            <CreateProductForm />
-          </DialogContent>
-        </Dialog>
-        <ProductsTable />
-      </div>
-    </NoResourcesWarning>
+        </div>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>
+              Adicionar um novo produto
+            </DialogTitle>
+          </DialogHeader>
+          <CreateProductForm />
+        </DialogContent>
+      </Dialog>
+      <ProductsTable />
+    </div>
   );
 }
