@@ -10,7 +10,7 @@ export function GeneralNavigationMenu() {
         <li>
           <Link href="/painel" className="text-sm flex gap-2 items-center font-medium">
             <RxDashboard />
-            Painel
+            Visão geral
           </Link>
         </li>
         <li>

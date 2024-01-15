@@ -1,4 +1,6 @@
-import { GeneralNavigationMenu, SupportNavigationMenu, ToolsNavigationMenu } from "..";
+import { GeneralNavigationMenu } from "./general-navigation-menu";
+import { SupportNavigationMenu } from "./support-navigation-menu";
+import { ToolsNavigationMenu } from "./tools-navigation-menu";
 
 export function NavigationMenu() {
   return (

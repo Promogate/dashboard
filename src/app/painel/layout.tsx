@@ -9,6 +9,7 @@ export default function Layout({ children }: { children: ReactNode; }) {
       <Navigation.Root>
         <Navigation.Image />
         <Navigation.Menu />
+        <Navigation.Footer />
       </Navigation.Root>
       <Content.Root>
         <Content.Topbar />
