@@ -5,20 +5,20 @@ import { ReactNode } from "react";
 
 export default function Layout({ children }: { children: ReactNode; }) {
   return (
-    <NoResourcesWarning>
-      <div className="flex">
-        <Navigation.Root>
-          <Navigation.Image />
-          <Navigation.Menu />
-          <Navigation.Footer />
-        </Navigation.Root>
-        <Content.Root>
-          <Content.Topbar />
+    <div className="flex">
+      <Navigation.Root>
+        <Navigation.Image />
+        <Navigation.Menu />
+        <Navigation.Footer />
+      </Navigation.Root>
+      <Content.Root>
+        <Content.Topbar />
+        <NoResourcesWarning>
           <Content.Container>
             {children}
           </Content.Container>
-        </Content.Root>
-      </div>
-    </NoResourcesWarning>
+        </NoResourcesWarning>
+      </Content.Root>
+    </div>
   );
 };

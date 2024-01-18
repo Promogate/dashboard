@@ -10,14 +10,16 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { Input } from "../ui/input";
 import { useToast } from "../ui/use-toast";
 import { queryClient } from "@/app/providers";
+import { useContext } from "react";
+import { useRedirectorContext } from "../redirector/redirector-context";
 
-type CreateRedirectorInput = {
-  title: string;
+type UpdateRedirectorInput = {
+  title?: string;
   descriptiont?: string;
 }
 
 const schema = z.object({
-  title: z.string().min(1, "O título não pode estar vazio."),
+  title: z.string().min(1, "O título não pode estar vazio.").optional(),
   description: z.string().optional()
 });
 
@@ -27,17 +29,19 @@ type CreateRedirectorFormProps = {
   setOpen: (value: boolean) => void;
 }
 
-export function CreateRedirectorForm({ setOpen }: CreateRedirectorFormProps) {
+export function UpdateRedirectorForm({ setOpen }: CreateRedirectorFormProps) {
   const { toast } = useToast();
   const user = useUser((state) => state.user);
   const resourcesId = user?.user_profile?.resources.id as string;
+  const { redirector } = useRedirectorContext();
   const form = useForm<createRedirectorSchema>({
-    resolver: zodResolver(schema)
+    resolver: zodResolver(schema),
+    values: { title: redirector.title, description: redirector.description }
   });
 
   const mutation = useMutation({
-    mutationFn: async (values: CreateRedirectorInput) => {
-      await api.post(`/redirector/create`, { ...values, resourcesId });
+    mutationFn: async (values: UpdateRedirectorInput) => {
+      await api.post(`/redirector/update/${redirector.id}`, { ...values, resourcesId });
     },
     onSuccess: () => {
       toast({
@@ -55,7 +59,7 @@ export function CreateRedirectorForm({ setOpen }: CreateRedirectorFormProps) {
     }
   });
 
-  const handleCreateRedirector: SubmitHandler<CreateRedirectorInput> = async (values) => {
+  const handleCreateRedirector: SubmitHandler<UpdateRedirectorInput> = async (values) => {
     await mutation.mutateAsync(values);
   };
 

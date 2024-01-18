@@ -87,7 +87,7 @@ export function NoResourcesWarning({ children }: { children: ReactNode }) {
 
   if (user?.user_profile === null) {
     return (
-      <div className="flex gap-x-8 items-center">
+      <div className="flex gap-x-8 items-center p-8">
         <Dialog open={open} onOpenChange={setOpen}>
           <Alert className="flex-1">
             <IoWarningOutline />

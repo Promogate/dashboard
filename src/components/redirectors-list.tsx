@@ -30,7 +30,7 @@ export function RedirectorsList() {
 
   if (isError) {
     return (
-      <div className="mx-auto py-10 my-10 h-32 rounded-md border bg-white flex flex-col justify-center items-center">
+      <div className="py-10 my-10 h-32 rounded-md border bg-white flex flex-col justify-center items-center">
         <BiError size={32} />
         <h2>Houve algum erro ao tentar encontrar os redirecionadores. Tente novamente.</h2>
       </div>
@@ -38,18 +38,25 @@ export function RedirectorsList() {
   }
 
   return (
-    <div className="grid 2xl:grid-cols-2 my-6 gap-y-4 gap-x-4">
+    <div className="w-full grid 2xl:grid-cols-2 my-6 gap-y-4 gap-x-4">
       {
-        data.map((redirector: RedirectorProps, index: number) => {
-          return (
-            <Redirector.Root key={index} redirector={redirector}>
-              <Redirector.Header>
-                <Redirector.Actions />
-              </Redirector.Header>
-              <Redirector.Info />
-            </Redirector.Root>
-          );
-        })
+        data.length === 0 ? (
+          <div className="py-10 my-10 h-32 rounded-md border bg-white flex justify-center items-center">
+            <BiError size={32} />
+            <h2>Você ainda não tem redirecionadores cadastrados</h2>
+          </div>
+        ) : (
+          data.map((redirector: RedirectorProps, index: number) => {
+            return (
+              <Redirector.Root key={index} redirector={redirector}>
+                <Redirector.Header>
+                  <Redirector.Actions />
+                </Redirector.Header>
+                <Redirector.Info />
+              </Redirector.Root>
+            );
+          })
+        )
       }
     </div>
   );
