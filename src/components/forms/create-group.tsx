@@ -38,7 +38,7 @@ export function CreateGroupForm({ setOpen, redirectorId }: CreateGroupFormProps)
   const { toast } = useToast();
   const form = useForm<createGroupSchema>({
     resolver: zodResolver(schema),
-    mode: "onBlur"
+    mode: "onSubmit"
   });
   const mutation = useMutation({
     mutationFn: async (values: CreateGroupInput) => {

@@ -333,8 +333,10 @@ export type Redirector = {
 }
 
 export type Group = {
+  id: string;
   title: string;
-  destinationLink: string;
-  members: string;
-  limit: string;
+  destination_link: string;
+  members: number;
+  limit: number;
+  redirector_id: string;
 }
