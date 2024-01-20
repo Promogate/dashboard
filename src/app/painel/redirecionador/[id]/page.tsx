@@ -10,12 +10,13 @@ import { copyToClipboard } from "@/utils/copy-to-clipboard";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useRef, useState } from "react";
-import { BiError } from "react-icons/bi";
+import { BiEditAlt, BiError } from "react-icons/bi";
 import { LiaCopySolid } from "react-icons/lia";
 import { TfiAngleLeft } from "react-icons/tfi";
 import { useQuery } from "react-query";
 import { PulseLoader } from "react-spinners";
 import { TbTrash } from "react-icons/tb";
+import { UpdateGroupDialog } from "@/components/dialogs/update-group";
 
 type RedirectorProps = {
   id: string;
@@ -40,6 +41,7 @@ export default function Page() {
   const params = useParams();
   const { toast } = useToast();
   const [open, setOpen] = useState(false);
+  const [openUpdate, setOpenUpdate] = useState(false);
   const shortlinkRef = useRef<HTMLInputElement>(null);
   const whatsappLinkRef = useRef<HTMLInputElement>(null);
 
@@ -127,10 +129,18 @@ export default function Page() {
                         <h2 className="text-xl font-semibold">
                           {group.title}
                         </h2>
-                        <div>
-                          <Button className="border border-red-600 text-red-600" size={"sm"} onClick={() => { }}>
+                        <div className="flex gap-2 items-center">
+                          <Button className="bg-red-500 text-white hover:bg-red-600 transition-all duration-200 ease-in-out" size={"sm"} onClick={() => { }}>
                             <TbTrash />
                           </Button>
+                          <Dialog open={openUpdate} onOpenChange={setOpenUpdate}>
+                            <DialogTrigger asChild>
+                              <Button className="bg-[#5528ff] hover:bg-[#4521cc] text-white transition-all duration-200 ease-in-out" size={"sm"}>
+                                <BiEditAlt />
+                              </Button>
+                            </DialogTrigger>
+                            <UpdateGroupDialog setOpen={setOpenUpdate} groupId={group.id}/>
+                          </Dialog>
                         </div>
                       </div>
                       <div className="mt-4">

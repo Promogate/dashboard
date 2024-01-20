@@ -41,11 +41,11 @@ export function UpdateRedirectorForm({ setOpen }: CreateRedirectorFormProps) {
 
   const mutation = useMutation({
     mutationFn: async (values: UpdateRedirectorInput) => {
-      await api.post(`/redirector/update/${redirector.id}`, { ...values, resourcesId });
+      await api.put(`/redirector/update/${redirector.id}`, { ...values });
     },
     onSuccess: () => {
       toast({
-        title: "Redirecionador criado com sucesso!",
+        title: "Redirecionador atualizado com sucesso!",
         variant: "default",
       });
       queryClient.invalidateQueries(["redirectors", resourcesId]);
@@ -93,8 +93,8 @@ export function UpdateRedirectorForm({ setOpen }: CreateRedirectorFormProps) {
           )}
         />
         <Button type="submit" className="bg-[#5528FF] text-white">
-          {mutation.isLoading && <PulseLoader color="#2a2a2a" size={4} />}
-          Adicionar
+          {mutation.isLoading && <PulseLoader color="#FFFFFF" size={4} />}
+          Atualizar
         </Button>
       </form>
     </Form>

@@ -10,39 +10,41 @@ import { Input } from "../ui/input";
 import { useToast } from "../ui/use-toast";
 import { queryClient } from "@/app/providers";
 import { useUser } from "@/application/states/user-store";
+import { useRedirectorContext } from "../redirector/redirector-context";
 
-type CreateGroupInput = {
-  title: string;
-  destinationLink: string;
-  members: string;
-  limit: string;
+type UpdateGroupInput = {
+  title?: string;
+  destinationLink?: string;
+  members?: string;
+  limit?: string;
 }
 
 const schema = z.object({
-  title: z.string({ required_error: "É obrigatório" }),
-  destinationLink: z.string({ required_error: "É obrigatório" }).url("Insira um url válida"),
-  members: z.string({ required_error: "É obrigatório" }).regex(/^(?:[1-9]\d{0,2}|102[0-4]?)$/, "O máximo são 1024 membros."),
-  limit: z.string({ required_error: "É obrigatório" }).regex(/^(?:[1-9]\d{0,2}|102[0-4]?)$/, "O máximo são 1024 membros.")
+  title: z.string({ required_error: "É obrigatório" }).optional(),
+  destinationLink: z.string({ required_error: "É obrigatório" }).url("Insira um url válida").optional(),
+  members: z.string({ required_error: "É obrigatório" }).regex(/^(?:[1-9]\d{0,2}|102[0-4]?)$/, "O máximo são 1024 membros.").optional(),
+  limit: z.string({ required_error: "É obrigatório" }).regex(/^(?:[1-9]\d{0,2}|102[0-4]?)$/, "O máximo são 1024 membros.").optional()
 });
 
-type createGroupSchema = z.infer<typeof schema>;
+type updateGroupSchema = z.infer<typeof schema>;
 
-type CreateGroupFormProps = {
+type UpdateGroupFormProps = {
   setOpen: (value: boolean) => void;
-  redirectorId: string;
+  groupId: string;
 }
 
-export function CreateGroupForm({ setOpen, redirectorId }: CreateGroupFormProps) {
+export function UpdateGroupForm({ setOpen, groupId }: UpdateGroupFormProps) {
   const user = useUser(state => state.user);
   const resourcesId = user?.user_profile?.resources.id as string;
+  const { redirector } = useRedirectorContext();
   const { toast } = useToast();
-  const form = useForm<createGroupSchema>({
+  const form = useForm<updateGroupSchema>({
     resolver: zodResolver(schema),
     mode: "onBlur"
   });
   const mutation = useMutation({
-    mutationFn: async (values: CreateGroupInput) => {
-      await api.post(`/redirector/${redirectorId}/group/create`, values);
+    mutationFn: async (values: UpdateGroupInput) => {
+      await api.post(`/redirector/group/update/${groupId}`, values);
     },
     onSuccess: () => {
       toast({
@@ -50,7 +52,7 @@ export function CreateGroupForm({ setOpen, redirectorId }: CreateGroupFormProps)
         variant: "default",
       });
       setOpen(false);
-      queryClient.invalidateQueries(["redirector", redirectorId]);
+      queryClient.invalidateQueries(["redirector", redirector.id]);
       queryClient.invalidateQueries(["redirectors", resourcesId]);
     },
     onError: (error: any) => {
@@ -61,7 +63,7 @@ export function CreateGroupForm({ setOpen, redirectorId }: CreateGroupFormProps)
     }
   });
 
-  const handleCreateRedirector: SubmitHandler<CreateGroupInput> = async (values) => {
+  const handleCreateRedirector: SubmitHandler<UpdateGroupInput> = async (values) => {
     await mutation.mutateAsync(values);
   };
 

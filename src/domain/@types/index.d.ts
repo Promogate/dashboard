@@ -328,6 +328,13 @@ export type Redirector = {
   description: string;
   redirectorLink: string;
   resources_id: string;
-  groups: [],
+  groups: Group[],
   totalClicks: number | null
+}
+
+export type Group = {
+  title: string;
+  destinationLink: string;
+  members: string;
+  limit: string;
 }
