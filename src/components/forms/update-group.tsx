@@ -21,10 +21,10 @@ type UpdateGroupInput = {
 }
 
 const schema = z.object({
-  title: z.string({ required_error: "É obrigatório" }).optional(),
-  destinationLink: z.string({ required_error: "É obrigatório" }).url("Insira um url válida").optional(),
-  members: z.string({ required_error: "É obrigatório" }).regex(/^(?:[1-9]\d{0,2}|102[0-4]?)$/, "O máximo são 1024 membros.").optional(),
-  limit: z.string({ required_error: "É obrigatório" }).regex(/^(?:[1-9]\d{0,2}|102[0-4]?)$/, "O máximo são 1024 membros.").optional()
+  title: z.string().optional(),
+  destinationLink: z.string().url("Insira um url válida").optional(),
+  members: z.string().regex(/^(102[0-4]|10[0-1][0-9]|[1-9][0-9]{0,2}|0)$/, "O máximo são 1024 membros.").optional(),
+  limit: z.string().regex(/^(102[0-4]|10[0-1][0-9]|[1-9][0-9]{0,2}|0)$/, "O máximo são 1024 membros.").optional()
 });
 
 type updateGroupSchema = z.infer<typeof schema>;
@@ -41,17 +41,22 @@ export function UpdateGroupForm({ setOpen, group }: UpdateGroupFormProps) {
   const { toast } = useToast();
   const form = useForm<updateGroupSchema>({
     resolver: zodResolver(schema),
-    mode: "onBlur",
+    mode: "onSubmit",
     values: {
       destinationLink: group.destination_link,
-      limit: String(group.limit),
+      limit: String(group.limit), 
       members: String(group.members),
       title: group.title
     }
   });
+
   const mutation = useMutation({
     mutationFn: async (values: UpdateGroupInput) => {
-      await api.post(`/redirector/group/update/${group.id}`, values);
+      await api.put(`/redirector/group/${group.id}`, {
+        ...values,
+        limit: Number(values.limit),
+        members: Number(values.members)
+      });
     },
     onSuccess: () => {
       toast({
@@ -133,7 +138,7 @@ export function UpdateGroupForm({ setOpen, group }: UpdateGroupFormProps) {
         </div>
         <Button type="submit" className="bg-[#5528FF] text-white">
           {mutation.isLoading && <PulseLoader color="#2a2a2a" size={4} />}
-          Adicionar
+          Atualizar grupo
         </Button>
       </form>
     </Form>

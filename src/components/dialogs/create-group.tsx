@@ -11,7 +11,7 @@ export function CreateGroupDialog({ setOpen, redirectorId }: CreateGroupDialogPr
     <DialogContent>
       <DialogHeader>
         <DialogTitle>
-          Adicionar novo redirecionador
+          Adicionar novo grupo
         </DialogTitle>
       </DialogHeader>
       <CreateGroupForm setOpen={setOpen} redirectorId={redirectorId} />

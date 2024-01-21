@@ -33,25 +33,25 @@ export function RedirectorActions() {
     <>
       <div className="flex gap-2 align-middle">
         <Input type="text" value={redirector.redirectorLink} readOnly ref={shortlinkRef} />
-        <Button className="bg-gray-200" onClick={handleCopyShortlink}>
+        <Button className="bg-gray-200" onClick={handleCopyShortlink} size={"sm"}>
           <LiaCopySolid />
         </Button>
         <Dialog open={openUpdate} onOpenChange={setOpenUpdate}>
           <DialogTrigger asChild>
-            <Button className="bg-[#5528ff] hover:bg-[#4521cc] text-white transition-all duration-200 ease-in-out">
+            <Button className="bg-[#5528ff] hover:bg-[#4521cc] text-white transition-all duration-200 ease-in-out" size={"sm"}>
               <BiEditAlt />
             </Button>
           </DialogTrigger>
           <UpdateRedirectorDialog setOpen={setOpenUpdate} redirector={redirector} />
         </Dialog>
         <Link href={`/painel/redirecionador/${redirector.id}`}>
-          <Button className="bg-gray-200">
+          <Button className="bg-gray-200" size={"sm"}>
             <PiArrowRightThin />
           </Button>
         </Link>
         <Dialog open={open} onOpenChange={setOpen}>
           <DialogTrigger asChild>
-            <Button className="bg-red-500 text-white hover:bg-red-600 transition-all duration-200 ease-in-out">
+            <Button className="bg-red-500 text-white hover:bg-red-600 transition-all duration-200 ease-in-out" size={"sm"}>
               <FaRegTrashAlt />
             </Button>
           </DialogTrigger>

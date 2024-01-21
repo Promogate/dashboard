@@ -21,8 +21,8 @@ type CreateGroupInput = {
 const schema = z.object({
   title: z.string({ required_error: "É obrigatório" }),
   destinationLink: z.string({ required_error: "É obrigatório" }).url("Insira um url válida"),
-  members: z.string({ required_error: "É obrigatório" }).regex(/^(?:[1-9]\d{0,2}|102[0-4]?)$/, "O máximo são 1024 membros."),
-  limit: z.string({ required_error: "É obrigatório" }).regex(/^(?:[1-9]\d{0,2}|102[0-4]?)$/, "O máximo são 1024 membros.")
+  members: z.string({ required_error: "É obrigatório" }).regex(/^(102[0-4]|10[0-1][0-9]|[1-9][0-9]{0,2}|0)$/, "O máximo são 1024 membros."),
+  limit: z.string({ required_error: "É obrigatório" }).regex(/^(102[0-4]|10[0-1][0-9]|[1-9][0-9]{0,2}|0)$/, "O máximo são 1024 membros.")
 });
 
 type createGroupSchema = z.infer<typeof schema>;
