@@ -11,6 +11,7 @@ import { useToast } from "../ui/use-toast";
 import { queryClient } from "@/app/providers";
 import { useUser } from "@/application/states/user-store";
 import { useRedirectorContext } from "../redirector/redirector-context";
+import { Group } from "@/domain/@types";
 
 type UpdateGroupInput = {
   title?: string;
@@ -30,21 +31,27 @@ type updateGroupSchema = z.infer<typeof schema>;
 
 type UpdateGroupFormProps = {
   setOpen: (value: boolean) => void;
-  groupId: string;
+  group: Group
 }
 
-export function UpdateGroupForm({ setOpen, groupId }: UpdateGroupFormProps) {
+export function UpdateGroupForm({ setOpen, group }: UpdateGroupFormProps) {
   const user = useUser(state => state.user);
   const resourcesId = user?.user_profile?.resources.id as string;
   const { redirector } = useRedirectorContext();
   const { toast } = useToast();
   const form = useForm<updateGroupSchema>({
     resolver: zodResolver(schema),
-    mode: "onBlur"
+    mode: "onBlur",
+    values: {
+      destinationLink: group.destination_link,
+      limit: String(group.limit),
+      members: String(group.members),
+      title: group.title
+    }
   });
   const mutation = useMutation({
     mutationFn: async (values: UpdateGroupInput) => {
-      await api.post(`/redirector/group/update/${groupId}`, values);
+      await api.post(`/redirector/group/update/${group.id}`, values);
     },
     onSuccess: () => {
       toast({

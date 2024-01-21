@@ -9,35 +9,22 @@ import { copyToClipboard } from "@/utils/copy-to-clipboard";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useRef, useState } from "react";
-import { BiEditAlt, BiError } from "react-icons/bi";
+import { BiError } from "react-icons/bi";
 import { LiaCopySolid } from "react-icons/lia";
 import { TfiAngleLeft } from "react-icons/tfi";
 import { useQuery } from "react-query";
 import { PulseLoader } from "react-spinners";
-import { TbTrash } from "react-icons/tb";
-import { UpdateGroupDialog } from "@/components/dialogs/update-group";
 import { CreateGroupDialog } from "@/components/dialogs/create-group";
-import { Group } from "@/domain/@types";
-
-type RedirectorProps = {
-  id: string;
-  title: string;
-  description: string;
-  redirectorLink: string;
-  timesClicked: string;
-  resources_id: string;
-  groups: Group[]
-}
+import { Redirector } from "@/domain/@types";
+import { Group } from "@/components/group";
 
 export default function Page() {
   const params = useParams();
   const { toast } = useToast();
   const [open, setOpen] = useState(false);
-  const [openUpdate, setOpenUpdate] = useState(false);
   const shortlinkRef = useRef<HTMLInputElement>(null);
-  const whatsappLinkRef = useRef<HTMLInputElement>(null);
 
-  const { data, isLoading, isError, refetch, isRefetching } = useQuery<RedirectorProps>(["redirector", params.id], {
+  const { data, isLoading, isError, refetch, isRefetching } = useQuery<Redirector>(["redirector", params.id], {
     queryFn: async () => {
       const { data } = await api.get(`/redirector/find-by-id/${params.id}`);
       return data;
@@ -77,7 +64,6 @@ export default function Page() {
 
   return (
     <>
-
       <div className="w-full">
         <div className="flex justify-between item-center">
           <Link href={"/painel/redirecionador"}>
@@ -119,44 +105,12 @@ export default function Page() {
             <div className="flex flex-col gap-y-4">
               {data?.groups.map((group, index) => {
                 return (
-                  <div key={index} className="border rounded-lg bg-white p-4">
-                    <div className="w-full flex justify-between items-center">
-                      <h2 className="text-xl font-semibold">
-                        {group.title}
-                      </h2>
-                      <div className="flex gap-2 items-center">
-                        <Button className="bg-red-500 text-white hover:bg-red-600 transition-all duration-200 ease-in-out" size={"sm"} onClick={() => { }}>
-                          <TbTrash />
-                        </Button>
-                        <Dialog open={openUpdate} onOpenChange={setOpenUpdate}>
-                          <DialogTrigger asChild>
-                            <Button className="bg-[#5528ff] hover:bg-[#4521cc] text-white transition-all duration-200 ease-in-out" size={"sm"}>
-                              <BiEditAlt />
-                            </Button>
-                          </DialogTrigger>
-                          <UpdateGroupDialog setOpen={setOpenUpdate} groupId={group.id} />
-                        </Dialog>
-                      </div>
-                    </div>
-                    <div className="mt-4">
-                      <div className="flex gap-2 align-middle">
-                        <Input type="text" value={group.destination_link} readOnly ref={whatsappLinkRef} />
-                        <Button variant={"ghost"} className="bg-gray-200" onClick={() => handleCopyShortlink(whatsappLinkRef)}>
-                          <LiaCopySolid />
-                        </Button>
-                      </div>
-                      <div className="grid grid-cols-4 mt-4">
-                        <div className="flex flex-col">
-                          <h3>Qtn. de membros</h3>
-                          {group.members}
-                        </div>
-                        <div className="flex flex-col">
-                          <h3>Limite de membros</h3>
-                          {group.limit}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
+                  <Group.Root key={index} redirector={data}>
+                    <Group.Header title={group.title}>
+                      <Group.Actions group={data.groups[index]}/>
+                    </Group.Header>
+                    <Group.Info destinationLink={group.destination_link} limit={group.limit} members={group.members}/>
+                  </Group.Root>
                 );
               })}
             </div>
