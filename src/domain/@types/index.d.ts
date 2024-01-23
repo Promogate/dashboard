@@ -106,6 +106,7 @@ export type Offer = {
   is_featured: boolean;
   is_free_shipping: boolean;
   resources_id: string;
+  short_link: string;
   categories: [];
 };
 
