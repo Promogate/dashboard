@@ -15,27 +15,55 @@ import { Input } from "../ui/input";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { ScrollArea } from "../ui/scroll-area";
 import { Textarea } from "../ui/textarea";
+import { useUser } from "@/application/states/user-store";
+import { useMutation } from "react-query";
+import { api } from "@/config";
+import { useToast } from "../ui/use-toast";
+
+type CreateProductInput = {
+  image: string;
+  title: string;
+  price: string;
+  oldPrice?: string;
+  destinationLink: string;
+  storeName: string;
+  expirationDate: Date;
+  description?: string;
+}
 
 const schema = z.object({
-  image: z.string().url({ message: "A image deve ser uma url válida" }),
-  title: z.string(),
-  price: z.string().regex(/([0-9]{3}),([0-9]{2}$)/g),
-  oldPrice: z.string().optional(),
-  destinationLink: z.string(),
-  storeName: z.string(),
-  expirationDate: z.string(),
+  image: z.string({ required_error: "O link da imagem do produto é obrigatório." }).url({ message: "A image deve ser uma url válida" }),
+  title: z.string({ required_error: "O título do produto é obrigatório." }),
+  // price: z.string().regex(/([0-9]{3}),([0-9]{2}$)/g),
+  price: z.string().regex(/^(\d{1,3}(\.\d{3})*(?:,\d{2})?|\d{1,}(?:,\d{2})?)$/g),
+  oldPrice: z.string().regex(/^(\d{1,3}(\.\d{3})*(?:,\d{2})?|\d{1,}(?:,\d{2})?)$/g).optional(),
+  destinationLink: z.string({ required_error: "O link de destino é obrigatório." }),
+  storeName: z.string({ required_error: "O nome da loja é obrigatório." }),
+  expirationDate: z.date({ required_error: "Escolha uma data de expiração." }),
   description: z.string().optional(),
 });
 
 export function CreateProductForm() {
-  const [date, setDate] = useState<Date>();
+  const user = useUser(state => state.user);
+  const { toast } = useToast();
   const form = useForm<z.infer<typeof schema>>({
     resolver: zodResolver(schema),
-    mode: "onSubmit",
+    mode: "onSubmit"
+  });
+
+  const mutation = useMutation({
+    mutationFn: async (values: CreateProductInput) => {
+      await api.post(`/resources/${user?.user_profile?.resources.id}/offer/create`, values);
+    },
+    onSuccess: () => {
+      toast({
+        title: "Produto criado com sucesso!"
+      });
+    }
   });
 
   async function onSubmit(values: z.infer<typeof schema>) {
-    console.log(values);
+    await mutation.mutateAsync(values);
   }
 
   return (
@@ -142,34 +170,41 @@ export function CreateProductForm() {
             control={form.control}
             name="expirationDate"
             render={({ field }) => (
-              <FormItem className="flex flex-col gap-1">
+              <FormItem className="flex flex-col">
                 <FormLabel>Data em que o produto expira</FormLabel>
-                <FormControl>
-                  <Popover>
-                    <PopoverTrigger asChild>
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <FormControl>
                       <Button
                         variant={"outline"}
                         className={cn(
-                          "w-[240px] justify-start text-left font-normal"
+                          "w-[240px] pl-3 text-left font-normal",
+                          !field.value && "text-muted-foreground"
                         )}
                       >
-                        <CalendarIcon className="mr-2 h-4 w-4" />
-                        {date ? format(date, "d/M/u") : <span>Escolha uma data</span>}
+                        {field.value ? (
+                          format(field.value, "PPP", { locale: ptBR })
+                        ) : (
+                          <span>Escolha uma data</span>
+                        )}
+                        <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
                       </Button>
-                    </PopoverTrigger>
-                    <PopoverContent className="w-auto p-0" align="start">
-                      <Calendar
-                        mode="single"
-                        selected={date}
-                        onSelect={setDate}
-                        locale={ptBR}
-                        initialFocus
-                      />
-                    </PopoverContent>
-                  </Popover>
-                </FormControl>
+                    </FormControl>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-auto p-0" align="start">
+                    <Calendar
+                      mode="single"
+                      selected={field.value}
+                      onSelect={field.onChange}
+                      disabled={(date) =>
+                        date < new Date()
+                      }
+                      initialFocus
+                    />
+                  </PopoverContent>
+                </Popover>
                 <FormDescription>
-                  Data em que o produto será removido da lista.
+                  Your date of birth is used to calculate your age.
                 </FormDescription>
                 <FormMessage />
               </FormItem>
