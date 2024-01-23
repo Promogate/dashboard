@@ -2,7 +2,7 @@ import { queryClient } from "@/app/providers";
 import { useUser } from "@/application/states/user-store";
 import { useToast } from "@/components/ui/use-toast";
 import { api } from "@/config";
-import { OffersResponse, SetShowcaseProductInput } from "@/domain/@types";
+import { Offer, OffersResponse, SetShowcaseProductInput } from "@/domain/@types";
 import { useMutation, useQuery } from "react-query";
 
 async function setShowcaseProduct(input: SetShowcaseProductInput): Promise<void> {
@@ -11,7 +11,7 @@ async function setShowcaseProduct(input: SetShowcaseProductInput): Promise<void>
   });
 }
 
-async function getProducts(resourcesId: string): Promise<OffersResponse> {
+async function getProducts(resourcesId: string): Promise<Offer[]> {
   const { data } = await api.get(`/resources/${resourcesId}/offers`);
 
   return data;

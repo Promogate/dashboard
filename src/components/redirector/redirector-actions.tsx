@@ -10,12 +10,15 @@ import { useRedirectorContext } from "./redirector-context";
 import { FaRegTrashAlt } from "react-icons/fa";
 import { Dialog, DialogContent, DialogHeader, DialogTrigger } from "../ui/dialog";
 import { DeleteRedirectorDialog } from "../dialogs/delete-redirector";
+import { PiArrowRightThin } from "react-icons/pi";
+import { UpdateRedirectorDialog } from "../dialogs/update-redirector";
 
 export function RedirectorActions() {
   const shortlinkRef = useRef<HTMLInputElement>(null);
   const { toast } = useToast();
   const { redirector } = useRedirectorContext();
   const [open, setOpen] = useState(false);
+  const [openUpdate, setOpenUpdate] = useState(false);
 
   const handleCopyShortlink = () => {
     if (shortlinkRef.current) {
@@ -27,24 +30,34 @@ export function RedirectorActions() {
     }
   };
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <>
       <div className="flex gap-2 align-middle">
         <Input type="text" value={redirector.redirectorLink} readOnly ref={shortlinkRef} />
-        <Button variant={"ghost"} className="bg-gray-200" onClick={handleCopyShortlink}>
+        <Button className="bg-gray-200" onClick={handleCopyShortlink} size={"sm"}>
           <LiaCopySolid />
         </Button>
+        <Dialog open={openUpdate} onOpenChange={setOpenUpdate}>
+          <DialogTrigger asChild>
+            <Button className="bg-[#5528ff] hover:bg-[#4521cc] text-white transition-all duration-200 ease-in-out" size={"sm"}>
+              <BiEditAlt />
+            </Button>
+          </DialogTrigger>
+          <UpdateRedirectorDialog setOpen={setOpenUpdate} redirector={redirector} />
+        </Dialog>
         <Link href={`/painel/redirecionador/${redirector.id}`}>
-          <Button className="bg-[#5528ff] hover:bg-[#4521cc] text-white transition-all duration-200 ease-in-out">
-            <BiEditAlt />
+          <Button className="bg-gray-200" size={"sm"}>
+            <PiArrowRightThin />
           </Button>
         </Link>
-        <DialogTrigger asChild>
-          <Button className="bg-red-500 text-white hover:bg-red-600 transition-all duration-200 ease-in-out">
-            <FaRegTrashAlt />
-          </Button>
-        </DialogTrigger>
+        <Dialog open={open} onOpenChange={setOpen}>
+          <DialogTrigger asChild>
+            <Button className="bg-red-500 text-white hover:bg-red-600 transition-all duration-200 ease-in-out" size={"sm"}>
+              <FaRegTrashAlt />
+            </Button>
+          </DialogTrigger>
+          <DeleteRedirectorDialog setOpen={setOpen} redirector={redirector} />
+        </Dialog>
       </div>
-      <DeleteRedirectorDialog setOpen={setOpen} redirector={redirector}/>
-    </Dialog>
+    </>
   );
 };
