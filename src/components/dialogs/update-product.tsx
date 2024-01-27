@@ -1,23 +1,20 @@
-import { Dispatch, SetStateAction } from "react";
 import { Product } from "../products-table/columns";
 import { DialogContent, DialogHeader, DialogTitle } from "../ui/dialog";
-import { Row } from "@tanstack/react-table";
 import { UpdateProductForm } from "../forms/update-product";
 
 type EditProductDialogProducts = {
-  setOpen: Dispatch<SetStateAction<boolean>>;
-  product: Row<Product>
+  product: Product
 }
 
-export function UpdateProductDialog({ setOpen, product }: EditProductDialogProducts) {
+export function UpdateProductDialog({ product }: EditProductDialogProducts) {
   return (
     <DialogContent>
       <DialogHeader>
         <DialogTitle>
-          {`Editar: ${product.original.title}`}
+          {`Editar: ${product.title}`}
         </DialogTitle>
       </DialogHeader>
-      <UpdateProductForm product={product} setOpen={setOpen}/>
+      <UpdateProductForm product={product} />
     </DialogContent>
   );
 }

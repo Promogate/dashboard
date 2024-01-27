@@ -49,21 +49,21 @@ export const columns: ColumnDef<Product>[] = [
       return (
         <div className="flex gap-2 items-center">
           <FacebookShareButton url={url}>
-            <Button size={"sm"}>
+            <Button size={"sm"} variant={"secondary"}>
               <FaFacebookF />
             </Button>
           </FacebookShareButton>
           <TelegramShareButton url={url}>
-            <Button size={"sm"}>
+            <Button size={"sm"} variant={"secondary"}>
               <FaTelegramPlane />
             </Button>
           </TelegramShareButton>
           <WhatsappShareButton url={url}>
-            <Button size={"sm"}>
+            <Button size={"sm"} variant={"secondary"}>
               <FaWhatsapp />
             </Button>
           </WhatsappShareButton>
-          <Button size={"sm"} onClick={() => copyToClipboard(row.original["short_link"])}>
+          <Button variant={"secondary"} size={"sm"} onClick={() => copyToClipboard(row.original["short_link"])}>
             <PiCopyLight />
           </Button>
         </div>

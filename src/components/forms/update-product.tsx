@@ -3,9 +3,7 @@
 import { cn } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CalendarIcon } from "@radix-ui/react-icons";
-import { format, parse } from "date-fns";
-import { ptBR } from "date-fns/locale";
-import { Dispatch, SetStateAction, useState } from "react";
+import { parse } from "date-fns";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { Button } from "..";
@@ -15,12 +13,10 @@ import { Input } from "../ui/input";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { ScrollArea } from "../ui/scroll-area";
 import { Textarea } from "../ui/textarea";
-import { useUser } from "@/application/states/user-store";
 import { useMutation } from "react-query";
 import { api } from "@/config";
 import { useToast } from "../ui/use-toast";
 import { queryClient } from "@/app/providers";
-import { Row } from "@tanstack/react-table";
 import { Product } from "../products-table/columns";
 
 type UpdateProductInput = {
@@ -46,37 +42,35 @@ const schema = z.object({
 });
 
 type UpdateProductFormProps = {
-  setOpen: Dispatch<SetStateAction<boolean>>;
-  product: Row<Product>
+  product: Product
 }
 
-export function UpdateProductForm({ product, setOpen }: UpdateProductFormProps) {
+export function UpdateProductForm({ product }: UpdateProductFormProps) {
   const { toast } = useToast();
   const form = useForm<z.infer<typeof schema>>({
     resolver: zodResolver(schema),
     mode: "onSubmit",
     values: {
-      title: product.original.title,
-      price: product.original.price,
-      description: product.original.description,
-      destinationLink: product.original.destination_link,
-      expirationDate: parse(product.original.expiration_date, "yyyy-MM-dd\'T\'HH:mm:ss", new Date()),
-      image: product.original.image,
-      oldPrice: product.original.old_price,
-      storeName: product.original.store_name
+      title: product.title,
+      price: product.price,
+      description: product.description,
+      destinationLink: product.destination_link,
+      expirationDate: parse(product.expiration_date, "yyyy-MM-dd\'T\'HH:mm:ss", new Date()),
+      image: product.image,
+      oldPrice: product.old_price,
+      storeName: product.store_name
     }
   });
 
   const mutation = useMutation({
     mutationFn: async (values: UpdateProductInput) => {
-      await api.put(`/resources/${product.original.resources_id}/offer/${product.original.id}/update`, values);
+      await api.put(`/resources/${product.resources_id}/offer/${product.id}/update`, values);
     },
     onSuccess: () => {
       toast({
         title: "Produto criado com sucesso!"
       });
-      queryClient.invalidateQueries(["products", product.original.resources_id]);
-      setOpen(false);
+      queryClient.invalidateQueries(["products", product.resources_id]);
     }
   });
 

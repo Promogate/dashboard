@@ -13,7 +13,6 @@ export function ProductsTable() {
 
   if (isLoading) {
     return (
-
       <div className="mx-auto py-10 my-10 h-32 rounded-md border bg-white flex justify-center items-center">
         <PulseLoader color="#2a2a2a" size={16} />
       </div>
