@@ -17,6 +17,11 @@ async function getProducts(resourcesId: string): Promise<Offer[]> {
   return data;
 }
 
+async function getSingleProduct(productId: string): Promise<Offer> {
+  const { data } = await api.get<Offer>(`/resources/offer/${productId}`);
+  return data;
+}
+
 export function useProductsHook() {
   const { toast } = useToast();
   const user = useUser((state) => state.user);
@@ -25,6 +30,11 @@ export function useProductsHook() {
   return {
     useProducts: () => useQuery(["products", resourcesId], {
       queryFn: async () => await getProducts(resourcesId),
+      cacheTime: 1000 * 60 * 5,
+      staleTime: 1000 * 60 * 5,
+    }),
+    useSingleProduct: (productId: string) => useQuery(["product", productId], {
+      queryFn: async () => await getSingleProduct(productId),
       cacheTime: 1000 * 60 * 5,
       staleTime: 1000 * 60 * 5,
     }),

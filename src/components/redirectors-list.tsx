@@ -10,6 +10,7 @@ import { Redirector } from "./redirector";
 
 export function RedirectorsList() {
   const user = useUser((state) => state.user);
+  console.log(user);
   const resourcesId = user?.user_profile?.resources.id as string;
   const { data, isLoading, isError } = useQuery(["redirectors", resourcesId], {
     queryFn: async () => {

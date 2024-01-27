@@ -4,20 +4,22 @@ import { useUser } from "@/application/states/user-store";
 import { Button, NoResourcesWarning, PageHeader, ProductsTable } from "@/components";
 import { CreateProductForm } from "@/components/forms";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { useQuery } from "react-query";
+import { useProductsHook } from "@/hooks/use-products";
+import { useState } from "react";
 import { PulseLoader } from "react-spinners";
 
 export default function Page() {
+  const [open, setOpen] = useState<boolean>(false);
   const user = useUser((state) => state.user);
-  const resourcesId = user?.user_profile?.resources.id as string;
-  const query = useQuery({ queryKey: ["products", resourcesId], cacheTime: 1000 * 60 * 5, staleTime: 1000 * 60 * 5 });
+  const { useProducts } = useProductsHook();
+  const query = useProducts();
   const handleProductsTableUpdate = () => {
     query.refetch();
   };
 
   return (
     <div className="w-full h-full">
-      <Dialog>
+      <Dialog open={open} onOpenChange={setOpen}>
         <div className="w-full flex justify-between items-center">
           <PageHeader>Produtos</PageHeader>
           <div className="flex items-center gap-4">
@@ -38,7 +40,7 @@ export default function Page() {
               Adicionar um novo produto
             </DialogTitle>
           </DialogHeader>
-          <CreateProductForm />
+          <CreateProductForm setOpen={setOpen}/>
         </DialogContent>
       </Dialog>
       <ProductsTable />

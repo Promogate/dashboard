@@ -3,9 +3,7 @@
 import { cn } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CalendarIcon } from "@radix-ui/react-icons";
-import { format } from "date-fns";
-import { ptBR } from "date-fns/locale";
-import { Dispatch, SetStateAction, useState } from "react";
+import { parse } from "date-fns";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { Button } from "..";
@@ -15,56 +13,64 @@ import { Input } from "../ui/input";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { ScrollArea } from "../ui/scroll-area";
 import { Textarea } from "../ui/textarea";
-import { useUser } from "@/application/states/user-store";
 import { useMutation } from "react-query";
 import { api } from "@/config";
 import { useToast } from "../ui/use-toast";
 import { queryClient } from "@/app/providers";
+import { Product } from "../products-table/columns";
 
-type CreateProductInput = {
-  image: string;
-  title: string;
-  price: string;
+type UpdateProductInput = {
+  image?: string;
+  title?: string;
+  price?: string;
   oldPrice?: string;
-  destinationLink: string;
-  storeName: string;
-  expirationDate: Date;
+  destinationLink?: string;
+  storeName?: string;
+  expirationDate?: Date;
   description?: string;
 }
 
 const schema = z.object({
-  image: z.string({ required_error: "O link da imagem do produto é obrigatório." }).url({ message: "A image deve ser uma url válida" }),
-  title: z.string({ required_error: "O título do produto é obrigatório." }),
-  price: z.string().regex(/^(\d{1,3}(\.\d{3})*(?:,\d{2})?|\d{1,}(?:,\d{2})?)$/g),
+  image: z.string().url({ message: "A image deve ser uma url válida" }).optional(),
+  title: z.string().optional(),
+  price: z.string().regex(/^(\d{1,3}(\.\d{3})*(?:,\d{2})?|\d{1,}(?:,\d{2})?)$/g).optional(),
   oldPrice: z.string().regex(/^(\d{1,3}(\.\d{3})*(?:,\d{2})?|\d{1,}(?:,\d{2})?)$/g).optional(),
-  destinationLink: z.string({ required_error: "O link de destino é obrigatório." }),
-  storeName: z.string({ required_error: "O nome da loja é obrigatório." }),
-  expirationDate: z.date({ required_error: "Escolha uma data de expiração." }),
+  destinationLink: z.string().optional(),
+  storeName: z.string().optional(),
+  expirationDate: z.date().optional(),
   description: z.string().optional(),
 });
 
-type CreateProductFormProps = {
-  setOpen: Dispatch<SetStateAction<boolean>>;
+type UpdateProductFormProps = {
+  product: Product
 }
 
-export function CreateProductForm({ setOpen }: CreateProductFormProps) {
-  const user = useUser(state => state.user);
+export function UpdateProductForm({ product }: UpdateProductFormProps) {
   const { toast } = useToast();
   const form = useForm<z.infer<typeof schema>>({
     resolver: zodResolver(schema),
-    mode: "onSubmit"
+    mode: "onSubmit",
+    values: {
+      title: product.title,
+      price: product.price,
+      description: product.description,
+      destinationLink: product.destination_link,
+      expirationDate: parse(product.expiration_date, "yyyy-MM-dd\'T\'HH:mm:ss", new Date()),
+      image: product.image,
+      oldPrice: product.old_price,
+      storeName: product.store_name
+    }
   });
 
   const mutation = useMutation({
-    mutationFn: async (values: CreateProductInput) => {
-      await api.post(`/resources/${user?.user_profile?.resources.id}/offer/create`, values);
+    mutationFn: async (values: UpdateProductInput) => {
+      await api.put(`/resources/${product.resources_id}/offer/${product.id}/update`, values);
     },
     onSuccess: () => {
       toast({
         title: "Produto criado com sucesso!"
       });
-      queryClient.invalidateQueries(["products", user?.user_profile?.resources.id]);
-      setOpen(false);
+      queryClient.invalidateQueries(["products", product.resources_id]);
     }
   });
 
@@ -188,11 +194,7 @@ export function CreateProductForm({ setOpen }: CreateProductFormProps) {
                           !field.value && "text-muted-foreground"
                         )}
                       >
-                        {field.value ? (
-                          format(field.value, "PPP", { locale: ptBR })
-                        ) : (
-                          <span>Escolha uma data</span>
-                        )}
+                          <span>{field.value?.toString()}</span>
                         <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
                       </Button>
                     </FormControl>

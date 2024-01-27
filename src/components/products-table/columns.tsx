@@ -8,6 +8,8 @@ import { FaFacebookF, FaTelegramPlane, FaWhatsapp } from "react-icons/fa";
 import { PiCopyLight } from "react-icons/pi";
 import { Button, Switch } from "..";
 import { ActionsMenu } from "./actions-menu";
+import { FacebookShareButton, TelegramShareButton, WhatsappShareButton } from "react-share";
+import { copyToClipboard } from "@/utils/copy-to-clipboard";
 
 export type Product = {
   id: string;
@@ -25,6 +27,7 @@ export type Product = {
   is_featured: boolean;
   is_free_shipping: boolean;
   resources_id: string;
+  short_link: string;
   categories: [];
 };
 
@@ -41,19 +44,26 @@ export const columns: ColumnDef<Product>[] = [
   {
     accessorKey: "share",
     header: "Compartilhar",
-    cell: () => {
+    cell: ({ row }) => {
+      const url = row.original["destination_link"];
       return (
         <div className="flex gap-2 items-center">
-          <Button size={"sm"}>
-            <FaFacebookF />
-          </Button>
-          <Button size={"sm"}>
-            <FaTelegramPlane />
-          </Button>
-          <Button size={"sm"}>
-            <FaWhatsapp />
-          </Button>
-          <Button size={"sm"}>
+          <FacebookShareButton url={url}>
+            <Button size={"sm"} variant={"secondary"}>
+              <FaFacebookF />
+            </Button>
+          </FacebookShareButton>
+          <TelegramShareButton url={url}>
+            <Button size={"sm"} variant={"secondary"}>
+              <FaTelegramPlane />
+            </Button>
+          </TelegramShareButton>
+          <WhatsappShareButton url={url}>
+            <Button size={"sm"} variant={"secondary"}>
+              <FaWhatsapp />
+            </Button>
+          </WhatsappShareButton>
+          <Button variant={"secondary"} size={"sm"} onClick={() => copyToClipboard(row.original["short_link"])}>
             <PiCopyLight />
           </Button>
         </div>
