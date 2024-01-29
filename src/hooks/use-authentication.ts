@@ -39,6 +39,10 @@ export function useAuthentication() {
 
         return config;
       });
+      toast({
+        title: "Logado com sucesso!",
+        className: "bg-green-500 text-white"
+      });
       router.push("/painel");
     }
   });

@@ -1,0 +1,231 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  // provider = "cockroachdb"
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                  String   @id @default(uuid())
+  name                String
+  email               String   @unique
+  password            String
+  created_at          DateTime @default(now())
+  agree_with_policies Boolean? @default(false)
+
+  user_profile UserProfile?
+
+  @@map("users")
+}
+
+model UserProfile {
+  id                   String           @id @default(uuid())
+  store_image          String
+  store_name           String           @unique
+  store_name_display   String
+  resources            Resources?
+  analytics            Analytics?
+  api_key              ApiKey?
+  social_media         UserSocialMedia?
+  lomadee_source_id    String?
+  admitad_verification String?
+  payment_customer_id  String?
+  role                 Role             @default(FREE)
+
+  user    User   @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  user_id String @unique
+
+  @@map("user_profile")
+}
+
+model UserSocialMedia {
+  id        String  @id @default(uuid())
+  facebook  String?
+  whatsapp  String?
+  instagram String?
+  telegram  String?
+  twitter   String?
+
+  user_profile    UserProfile? @relation(fields: [user_profile_id], references: [id], onDelete: Cascade)
+  user_profile_id String       @unique
+
+  @@map("user_social_media")
+}
+
+enum Role {
+  MASTER
+  FREE
+  PREMIUM
+}
+
+model ApiKey {
+  id              String   @id @default(uuid())
+  key             String   @unique
+  created_at      DateTime @default(now())
+  expiration_date DateTime
+
+  user_profile    UserProfile @relation(fields: [user_profile_id], references: [id], onDelete: Cascade)
+  user_profile_id String      @unique
+
+  @@map("api_key")
+}
+
+model Resources {
+  id          String       @id @default(uuid())
+  offers      Offer[]
+  categories  Category[]
+  created_at  DateTime     @default(now())
+  analytics   Analytics?
+  redirectors Redirector[]
+
+  user_profile    UserProfile? @relation(fields: [user_profile_id], references: [id], onDelete: Cascade)
+  user_profile_id String       @unique
+
+  @@map("resources")
+}
+
+model Offer {
+  id                 String              @id @default(uuid())
+  image              String
+  title              String
+  old_price          String?
+  price              String
+  destination_link   String
+  store_image        String?
+  store_name         String
+  description        String?
+  expiration_date    String?
+  short_link         String
+  created_at         DateTime            @default(now())
+  is_on_showcase     Boolean             @default(false)
+  is_featured        Boolean             @default(false)
+  is_free_shipping   Boolean             @default(false)
+  offer_clicks       OfferClicks[]
+  destination_clicks DestinationClicks[]
+  categories         CategoriesOnOffer[]
+
+  resources    Resources @relation(fields: [resources_id], references: [id], onDelete: Cascade)
+  resources_id String
+
+  @@map("offers")
+}
+
+model Category {
+  id             String        @id @default(uuid())
+  name           String
+  sub_categories SubCategory[]
+
+  resources    Resources           @relation(fields: [resources_id], references: [id], onDelete: Cascade)
+  resources_id String
+  offers       CategoriesOnOffer[]
+
+  @@map("categories")
+}
+
+model CategoriesOnOffer {
+  offer       Offer    @relation(fields: [offer_id], references: [id], onDelete: Cascade)
+  offer_id    String
+  category    Category @relation(fields: [category_id], references: [id], onDelete: Cascade)
+  category_id String
+  resource_id String
+  created_at  DateTime @default(now())
+
+  @@id([offer_id, category_id])
+}
+
+model SubCategory {
+  id   String @id @default(uuid())
+  name String
+
+  category    Category @relation(fields: [category_id], references: [id], onDelete: Cascade)
+  category_id String
+
+  @@map("sub_categories")
+}
+
+model Analytics {
+  id                 String              @id @default(uuid())
+  offer_clicks       OfferClicks[]
+  destination_clicks DestinationClicks[]
+
+  resources    Resources @relation(fields: [resources_id], references: [id], onDelete: Cascade)
+  resources_id String    @unique
+
+  user_profile    UserProfile @relation(fields: [user_profile_id], references: [id], onDelete: Cascade)
+  user_profile_id String      @unique
+
+  @@map("analytics")
+}
+
+model OfferClicks {
+  id         String   @id @default(uuid())
+  created_at DateTime @default(now())
+
+  analytics    Analytics @relation(fields: [analytics_id], references: [id], onDelete: Cascade)
+  analytics_id String
+
+  offer    Offer  @relation(fields: [offer_id], references: [id], onDelete: Cascade)
+  offer_id String
+
+  @@map("offer_clicks")
+}
+
+model DestinationClicks {
+  id               String   @id @default(uuid())
+  destination_link String
+  created_at       DateTime @default(now())
+
+  analytics    Analytics @relation(fields: [analytics_id], references: [id], onDelete: Cascade)
+  analytics_id String
+
+  offer    Offer  @relation(fields: [offer_id], references: [id], onDelete: Cascade)
+  offer_id String
+
+  @@map("destination_clicks")
+}
+
+model Redirector {
+  id               String  @id @default(uuid())
+  title            String
+  description      String?
+  groups           Group[]
+  redirectorLink   String  @unique
+  timesClicked     Int     @default(0)
+  type             String  @default("sequential")
+  currentGroup     Int     @default(0)
+  redirectorStatus String  @default("started")
+
+  resources    Resources @relation(fields: [resources_id], references: [id], onDelete: Cascade)
+  resources_id String
+
+  @@map("redirectors")
+}
+
+model Group {
+  id               String  @id @default(uuid())
+  title            String?
+  destination_link String
+  members          Int
+  limit            Int     @default(1024)
+
+  redirector    Redirector @relation(fields: [redirector_id], references: [id], onDelete: Cascade)
+  redirector_id String
+
+  @@map("groups")
+}
+
+model UserSubscription {
+  id                     String    @id @default(uuid())
+  userId                 String    @unique
+  userProfileId          String    @unique
+  stripeCustomerId       String?   @unique @map(name: "stripe_customer_id")
+  stripeSubscriptionId   String?   @unique @map(name: "stripe_subscription_id")
+  stripePriceId          String?   @map(name: "stripe_price_id")
+  stripeCurrentPeriodEnd DateTime? @map(name: "stripe_current_period_end")
+}
