@@ -6,8 +6,8 @@ import { deleteCookie, setCookie } from "cookies-next";
 import { useRouter } from "next/navigation";
 import { useMutation, useQuery } from "react-query";
 
-async function getUserData(id: string): Promise<User> {
-  const { data } = await api.get(`/users/me/${id}`);
+async function getUserData(): Promise<User> {
+  const { data } = await api.get(`/users/me/`);
   return data;
 }
 
@@ -60,7 +60,7 @@ export function useAuthentication() {
 
   const meData = useQuery({
     queryKey: ["userData", user?.id],
-    queryFn: async () => await getUserData(user?.id as string),
+    queryFn: async () => await getUserData(),
     cacheTime: 1000 * 60 * 60,
     staleTime: 1000 * 60 * 60,
     retry: 3,
