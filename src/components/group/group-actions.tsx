@@ -19,7 +19,7 @@ export function GroupActions({ group }: GroupActionsProps) {
     <>
       <Dialog open={openDelete} onOpenChange={setOpenDelete}>
         <DialogTrigger>
-          <Button className="bg-red-500 text-white hover:bg-red-600 transition-all duration-200 ease-in-out" size={"sm"} onClick={() => { }}>
+          <Button className="bg-red-500 text-white hover:bg-red-600 transition-all duration-200 ease-in-out" size="icon" onClick={() => { }}>
             <TbTrash />
           </Button>
           <DeleteGroupDialog setOpen={setOpenDelete} group={group}/>
@@ -27,7 +27,7 @@ export function GroupActions({ group }: GroupActionsProps) {
       </Dialog>
       <Dialog open={openUpdate} onOpenChange={setOpenUpdate}>
         <DialogTrigger asChild>
-          <Button className="bg-[#5528ff] hover:bg-[#4521cc] text-white transition-all duration-200 ease-in-out" size={"sm"}>
+          <Button className="bg-[#5528ff] hover:bg-[#4521cc] text-white transition-all duration-200 ease-in-out" size="icon">
             <BiEditAlt />
           </Button>
         </DialogTrigger>

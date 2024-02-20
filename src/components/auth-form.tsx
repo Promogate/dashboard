@@ -57,7 +57,7 @@ export function AuthForm() {
       </form>
       <div className="flex justify-between w-full items-center">
         <Link href="/recuperar-senha" className="text-xs">Esqueceu a senha?</Link>
-        <Link href="/cadastrar-se" className="text-xs">Cadastrar-se</Link>
+        <Link href="/cadastrar-se" className="text-xs underline">Cadastrar-se</Link>
       </div>
     </div>
   );

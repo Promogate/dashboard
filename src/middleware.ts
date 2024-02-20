@@ -1,13 +1,14 @@
 import { api } from "@/config";
+import { getCookie } from "cookies-next";
 import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 
 export function middleware(request: NextRequest) {
-  const cookiesStorage = cookies();
-  if (cookiesStorage.get("promogate.token")) {
+  const promogateToken = getCookie("promogate.token", { cookies });
+  if (promogateToken) {
     api.get("/users/me", {
       headers: {
-        Authorization: `Bearer ${cookiesStorage.get("promogate.token")}`
+        Authorization: `Bearer ${promogateToken}`
       }
     }).then((response) => {
       const { data } = response;
@@ -15,7 +16,7 @@ export function middleware(request: NextRequest) {
       return NextResponse.redirect(new URL("/", request.url));
     });
   }
-  if (!cookiesStorage.get("promogate.token")) {
+  if (!promogateToken) {
     return NextResponse.redirect(new URL("/sem-permissao", request.url));
   }
 }
